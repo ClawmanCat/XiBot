@@ -125,7 +125,7 @@ response_map = [
         lambda _: 'Rightful Chinese territory! It\'s in the name!'
     ),
     (
-        if_contains('twitter', 'facebook', 'instagram', 'snapchat', 'whatsapp', 'telegram', 'discord'),
+        if_contains_word('twitter', 'facebook', 'instagram', 'snapchat', 'whatsapp', 'telegram', 'discord'),
         lambda _: 'Did you mean WeChat?'
     ),
     (
@@ -141,7 +141,7 @@ response_map = [
         lambda _: 'Capitalism bad.'
     ),
     (
-        logical_or(if_contains('otter'), if_contains_word('otta')),
+        logical_or(if_contains('otter'), if_contains_word('otta', 'ottas')),
         lambda _: '<image>commie.jpg'
     )
 ]
