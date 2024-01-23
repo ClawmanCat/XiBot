@@ -1,7 +1,10 @@
 assets/token.txt
+assets/api_key.txt
 assets/reputation.json
 assets/user_ids.json
 assets/file_ids.json
+assets/api_auth.json
+tests
 
 venv/
 __pycache__/
