@@ -1,3 +1,4 @@
+import datetime
 import subprocess
 
 from telegram.ext import Updater, MessageHandler, Filters
@@ -39,7 +40,7 @@ def command_show_version(update, context):
 
 
 def command_show_patchnotes(update, context):
-    commit_hash = subprocess.run(['git', 'rev-parse', 'HEAD'], capture_output=True).stdout.decode("utf-8")
+    commit_hash = subprocess.run(['git', 'rev-parse', 'HEAD'], capture_output = True).stdout.decode("utf-8")
     patchnotes  = read_text('patchnotes.txt').replace('${COMMIT}', commit_hash)
     send_reply(update, context, patchnotes)
 
@@ -49,10 +50,32 @@ def command_clear_chatbot_history(update, context):
     send_reply(update, context, 'Huh? Where am I? What year is it?')
 
 
+chatbot_usage_frequency = dict()
+
+def check_update_usage_frequency(user):
+    usage_interval_timer = datetime.timedelta(minutes = 5)
+    max_uses_in_interval = 7
+
+    if user not in chatbot_usage_frequency:
+        chatbot_usage_frequency[user] = []
+
+    now = datetime.datetime.now()
+    chatbot_usage_frequency[user].append(now)
+    num_recent_calls = len(list(x for x in chatbot_usage_frequency[user] if (now - x) < usage_interval_timer))
+    chatbot_usage_frequency[user] = list(x for x in chatbot_usage_frequency[user] if (now - x) < usage_interval_timer)
+
+    return num_recent_calls <= max_uses_in_interval
+
+
 def text_generation_reply(update, context):
     if not config['enable_text_generation']: return
 
     try:
+        # Prevent spamming
+        if not check_update_usage_frequency(update.message.from_user.name):
+            send_reply(update, context, 'I have more important things to do right now than to talk to the likes of you, capitalist pig.')
+            return
+
         chatbot  = get_xi_jinping_chatbot()
         message  = update.message.text.replace(update.message.bot.name, 'Xi Jinping')
         response = chatbot.generate_response(update.message.from_user.full_name, message, update)
