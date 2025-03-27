@@ -53,8 +53,8 @@ def command_clear_chatbot_history(update, context):
 chatbot_usage_frequency = dict()
 
 def check_update_usage_frequency(user):
-    usage_interval_timer = datetime.timedelta(minutes = 5)
-    max_uses_in_interval = 7
+    usage_interval_timer = datetime.timedelta(minutes = 10)
+    max_uses_in_interval = 5
 
     if user not in chatbot_usage_frequency:
         chatbot_usage_frequency[user] = []
