@@ -319,7 +319,8 @@ response_map = [
     (
         if_contains_word('xi', 'jinpin', 'jinping'),
         change_score(25, 50, wrapped = random_response([
-            (lambda update: 'Ni Hao!', 0.8),
+            (lambda update: 'Ni Hao!', 0.4),
+            (lambda update: '<video>wassup.mp4', 0.4),
             (lambda update: '<video>life_of_xi.mp4', 0.1),
             (lambda update: '<image>happy_xi.jpg', 0.1)
         ]))
